@@ -17,13 +17,13 @@ abstract class AbstractServer extends AbstractObject
      * 主机
      * @var string
      */
-    public $host = '127.0.0.1';
+    public $host;
 
     /**
      * 端口
      * @var int
      */
-    public $port = 9501;
+    public $port;
 
     /**
      * 应用配置文件
