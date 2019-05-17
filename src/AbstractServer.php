@@ -44,12 +44,6 @@ abstract class AbstractServer extends AbstractObject
     public $server;
 
     /**
-     * 默认运行参数
-     * @var array
-     */
-    protected $_defaultSetting = [];
-
-    /**
      * 服务名称
      * @var string
      */
