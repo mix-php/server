@@ -14,6 +14,12 @@ abstract class AbstractServer extends AbstractObject
 {
 
     /**
+     * 服务名称
+     * @var string
+     */
+    const SERVER_NAME = '';
+
+    /**
      * 主机
      * @var string
      */
@@ -42,12 +48,6 @@ abstract class AbstractServer extends AbstractObject
      * @var \Swoole\Server
      */
     public $server;
-
-    /**
-     * 服务名称
-     * @var string
-     */
-    const SERVER_NAME = '';
 
     /**
      * 初始化事件
