@@ -17,7 +17,7 @@ abstract class AbstractServer extends AbstractObject
      * 服务名称
      * @var string
      */
-    const SERVER_NAME = '';
+    public $name = '';
 
     /**
      * 主机
@@ -67,7 +67,7 @@ abstract class AbstractServer extends AbstractObject
     public function onStart(\Swoole\Server $server)
     {
         // 进程命名
-        ProcessHelper::setProcessTitle(static::SERVER_NAME . ": master {$this->host}:{$this->port}");
+        ProcessHelper::setProcessTitle($this->name . ": master {$this->host}:{$this->port}");
     }
 
     /**
@@ -98,7 +98,7 @@ abstract class AbstractServer extends AbstractObject
         try {
 
             // 进程命名
-            ProcessHelper::setProcessTitle(static::SERVER_NAME . ": manager");
+            ProcessHelper::setProcessTitle($this->name . ": manager");
             // 执行回调
             $this->setting['hook_manager_start'] and call_user_func($this->setting['hook_manager_start'], $server);
 
@@ -196,7 +196,7 @@ _/ / / / / / / /\ \/ _ / /_/ / / / / /_/ /
 
 
 EOL;
-        println('Server         Name:      ' . static::SERVER_NAME);
+        println('Server         Name:      ' . $this->name);
         println('System         Name:      ' . strtolower(PHP_OS));
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");
