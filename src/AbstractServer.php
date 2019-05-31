@@ -212,8 +212,8 @@ _/ / / / / / / /\ \/ _ / /_/ / / / / /_/ /
 
 
 EOL;
-        !$this->configFile and println('APP            Name:      ' . $this->config['appName']);
-        !$this->configFile and println('APP            Version:   ' . $this->config['appVersion']);
+        println('APP            Name:      ' . $this->config['appName']);
+        println('APP            Version:   ' . $this->config['appVersion']);
         println('Server         Name:      ' . $this->name);
         println('Server         Version:   ' . $this->version);
         println('System         Name:      ' . strtolower(PHP_OS));
