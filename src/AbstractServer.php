@@ -14,10 +14,16 @@ abstract class AbstractServer extends AbstractObject
 {
 
     /**
-     * 服务名称
+     * 服务器名称
      * @var string
      */
     public $name = '';
+
+    /**
+     * 服务器版本
+     * @var string
+     */
+    public $version = '';
 
     /**
      * 主机
@@ -206,9 +212,10 @@ _/ / / / / / / /\ \/ _ / /_/ / / / / /_/ /
 
 
 EOL;
-        !$this->configFile and println('App            Name:      ' . $this->config['appName']);
-        !$this->configFile and println('App            Version:      ' . $this->config['appVersion']);
+        !$this->configFile and println('APP            Name:      ' . $this->config['appName']);
+        !$this->configFile and println('APP            Version:   ' . $this->config['appVersion']);
         println('Server         Name:      ' . $this->name);
+        println('Server         Version:   ' . $this->version);
         println('System         Name:      ' . strtolower(PHP_OS));
         println("PHP            Version:   {$phpVersion}");
         println("Swoole         Version:   {$swooleVersion}");
@@ -217,8 +224,6 @@ EOL;
         $this->setting['enable_coroutine'] and println('Coroutine      Mode:      enabled');
         println("Listen         Addr:      {$this->host}");
         println("Listen         Port:      {$this->port}");
-        println('Reactor        Num:       ' . $this->setting['reactor_num']);
-        println('Worker         Num:       ' . $this->setting['worker_num']);
         $this->configFile and println("Configuration  File:      {$this->configFile}");
     }
 
