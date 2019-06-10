@@ -38,7 +38,7 @@ abstract class AbstractServer extends AbstractObject
     public $port;
 
     /**
-     * 应用配置文件
+     * 应用配置文件 (为了兼容旧版本，保留这项配置)
      * @var string
      */
     public $configFile = '';
