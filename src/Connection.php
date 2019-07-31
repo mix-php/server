@@ -3,7 +3,7 @@
 namespace Mix\Server;
 
 use Mix\Server\Exception\ReceiveException;
-use Mix\Socket\Socket;
+use Swoole\Coroutine\Socket;
 
 /**
  * Class Connection

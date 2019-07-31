@@ -16,8 +16,7 @@
     }
   ],
   "require": {
-    "php": ">=7.0.0",
-    "mix/socket": "v2.1.x-dev"
+    "php": ">=7.0.0"
   },
   "autoload": {
     "psr-4": {
