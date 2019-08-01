@@ -11,14 +11,14 @@ class ConnectionManager
 {
 
     /**
-     * @var TcpConnection[]
+     * @var Connection[]
      */
     protected $connections = [];
 
     /**
      * 新增连接
      * @param int $fd
-     * @param TcpConnection $connection
+     * @param Connection $connection
      */
     public function add(int $fd, Connection $connection)
     {
@@ -46,7 +46,7 @@ class ConnectionManager
 
     /**
      * 获取全部连接
-     * @return TcpConnection[]
+     * @return Connection[]
      */
     public function getConnections()
     {

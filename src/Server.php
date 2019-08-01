@@ -31,7 +31,7 @@ class Server
     public $swooleServer;
 
     /**
-     * @var TcpConnectionManager
+     * @var ConnectionManager
      */
     public $connectionManager;
 
@@ -47,7 +47,7 @@ class Server
         $this->port              = $port;
         $this->ssl               = $ssl;
         $this->swooleServer      = new \Swoole\Coroutine\Server($host, $port, $ssl);
-        $this->connectionManager = new TcpConnectionManager();
+        $this->connectionManager = new ConnectionManager();
     }
 
     /**
@@ -69,7 +69,7 @@ class Server
             try {
                 // 生成连接
                 $connection = new Connection($connection, $this->connectionManager);
-                $fd         = $connection->getSocket()->fd;
+                $fd         = $connection->getSwooleSocket()->fd;
                 $this->connectionManager->add($fd, $connection);
                 // 执行回调
                 call_user_func($callback, $connection);

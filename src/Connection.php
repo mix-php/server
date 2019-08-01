@@ -19,16 +19,16 @@ class Connection
     public $swooleConnection;
 
     /**
-     * @var TcpConnectionManager
+     * @var ConnectionManager
      */
     public $connectionManager;
 
     /**
-     * TcpConnection constructor.
+     * Connection constructor.
      * @param SwooleConnection $connection
-     * @param TcpConnectionManager $connectionManager
+     * @param ConnectionManager $connectionManager
      */
-    public function __construct(\Swoole\Coroutine\Server\Connection $connection, TcpConnectionManager $connectionManager)
+    public function __construct(\Swoole\Coroutine\Server\Connection $connection, ConnectionManager $connectionManager)
     {
         $this->swooleConnection  = $connection;
         $this->connectionManager = $connectionManager;
@@ -41,7 +41,7 @@ class Connection
     public function recv()
     {
         $data   = $this->swooleConnection->recv();
-        $socket = $this->getSocket();
+        $socket = $this->getSwooleSocket();
         if ($socket->errCode != 0 || $socket->errMsg != '') {
             $this->close();
             throw new ReceiveException($socket->errMsg, $socket->errCode);
@@ -65,16 +65,16 @@ class Connection
      */
     public function close()
     {
-        $fd = $this->getSocket()->fd;
+        $fd = $this->getSwooleSocket()->fd;
         $this->connectionManager->remove($fd);
         return $this->swooleConnection->close();
     }
 
     /**
-     * Get socket
+     * Get swoole socket
      * @return Socket
      */
-    public function getSocket()
+    public function getSwooleSocket()
     {
         return $this->swooleConnection->socket;
     }
