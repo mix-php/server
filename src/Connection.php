@@ -40,10 +40,10 @@ class Connection
      */
     public function recv()
     {
-        $data   = $this->swooleConnection->recv();
-        $socket = $this->getSwooleSocket();
-        if ($socket->errCode != 0 || $socket->errMsg != '') {
+        $data = $this->swooleConnection->recv();
+        if ($data === false) {
             $this->close();
+            $socket = $this->getSwooleSocket();
             throw new ReceiveException($socket->errMsg, $socket->errCode);
         }
         return $data;
