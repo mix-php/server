@@ -2,7 +2,7 @@
 
 namespace Mix\Server;
 
-use Mix\Server\Exception\ReceiveException;
+use Mix\Server\Exception\ReceiveFailureException;
 use Swoole\Coroutine\Socket;
 
 /**
@@ -44,7 +44,7 @@ class Connection
         if ($data === false) {
             $this->close();
             $socket = $this->getSwooleSocket();
-            throw new ReceiveException($socket->errMsg, $socket->errCode);
+            throw new ReceiveFailureException($socket->errMsg, $socket->errCode);
         }
         return $data;
     }
