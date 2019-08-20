@@ -69,7 +69,7 @@ class Server
             try {
                 // 生成连接
                 $connection = new Connection($connection, $this->connectionManager);
-                $fd         = $connection->getSwooleSocket()->fd;
+                $fd         = $connection->swooleSocket->fd;
                 $this->connectionManager->add($fd, $connection);
                 // 执行回调
                 call_user_func($callback, $connection);

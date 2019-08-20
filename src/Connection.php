@@ -3,7 +3,6 @@
 namespace Mix\Server;
 
 use Mix\Server\Exception\ReceiveFailureException;
-use Swoole\Coroutine\Socket;
 
 /**
  * Class Connection
@@ -14,14 +13,19 @@ class Connection
 {
 
     /**
-     * @var Connection
+     * @var \Swoole\Coroutine\Server\Connection
      */
-    public $swooleConnection;
+    protected $swooleConnection;
 
     /**
      * @var ConnectionManager
      */
-    public $connectionManager;
+    protected $connectionManager;
+
+    /**
+     * @var \Swoole\Coroutine\Socket
+     */
+    public $swooleSocket;
 
     /**
      * Connection constructor.
@@ -32,6 +36,7 @@ class Connection
     {
         $this->swooleConnection  = $connection;
         $this->connectionManager = $connectionManager;
+        $this->swooleSocket      = $connection->socket;
     }
 
     /**
@@ -43,7 +48,7 @@ class Connection
         $data = $this->swooleConnection->recv();
         if ($data === false) {
             $this->close();
-            $socket = $this->getSwooleSocket();
+            $socket = $this->swooleSocket;
             throw new ReceiveFailureException($socket->errMsg, $socket->errCode);
         }
         return $data;
@@ -65,18 +70,9 @@ class Connection
      */
     public function close()
     {
-        $fd = $this->getSwooleSocket()->fd;
+        $fd = $this->swooleSocket->fd;
         $this->connectionManager->remove($fd);
         return $this->swooleConnection->close();
-    }
-
-    /**
-     * Get swoole socket
-     * @return Socket
-     */
-    public function getSwooleSocket()
-    {
-        return $this->swooleConnection->socket;
     }
 
 }
