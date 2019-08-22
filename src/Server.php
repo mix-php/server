@@ -36,12 +36,12 @@ class Server
     public $connectionManager;
 
     /**
-     * HttpServer constructor.
+     * Server constructor.
      * @param string $host
      * @param int $port
      * @param bool $ssl
      */
-    public function __construct(string $host, int $port, bool $ssl)
+    public function __construct(string $host, int $port, bool $ssl = false)
     {
         $this->host              = $host;
         $this->port              = $port;
