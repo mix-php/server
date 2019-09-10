@@ -24,7 +24,7 @@ class ConnectionManager
     {
         $this->connections[$fd] = $connection;
     }
-    
+
     /**
      * 移除连接
      * @param int $fd
@@ -32,6 +32,15 @@ class ConnectionManager
     public function remove(int $fd)
     {
         unset($this->connections[$fd]);
+    }
+
+    /**
+     * 计数
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->connections);
     }
 
     /**
