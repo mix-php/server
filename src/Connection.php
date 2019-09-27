@@ -46,10 +46,16 @@ class Connection
     public function recv()
     {
         $data = $this->swooleConnection->recv();
-        if ($data === false) {
+        if ($data === false) { // 接收失败
             $this->close();
             $socket = $this->swooleSocket;
             throw new ReceiveFailureException($socket->errMsg, $socket->errCode);
+        }
+        if ($data === "") { // 连接关闭
+            $this->close();
+            $errCode = 104;
+            $errMsg  = swoole_strerror($errCode, 9);
+            throw new ReceiveFailureException($errMsg, $errCode);
         }
         return $data;
     }
