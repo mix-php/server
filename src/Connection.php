@@ -29,7 +29,7 @@ class Connection
 
     /**
      * Connection constructor.
-     * @param SwooleConnection $connection
+     * @param \Swoole\Coroutine\Server\Connection $connection
      * @param ConnectionManager $connectionManager
      */
     public function __construct(\Swoole\Coroutine\Server\Connection $connection, ConnectionManager $connectionManager)
