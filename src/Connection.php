@@ -2,7 +2,8 @@
 
 namespace Mix\Server;
 
-use Mix\Server\Exception\ReceiveFailureException;
+use Mix\Server\Exception\ReceiveException;
+use Mix\Server\Exception\SendException;
 
 /**
  * Class Connection
@@ -49,13 +50,13 @@ class Connection
         if ($data === false) { // 接收失败
             $this->close();
             $socket = $this->swooleSocket;
-            throw new ReceiveFailureException($socket->errMsg, $socket->errCode);
+            throw new ReceiveException($socket->errMsg, $socket->errCode);
         }
         if ($data === "") { // 连接关闭
             $this->close();
             $errCode = 104;
             $errMsg  = swoole_strerror($errCode, 9);
-            throw new ReceiveFailureException($errMsg, $errCode);
+            throw new ReceiveException($errMsg, $errCode);
         }
         return $data;
     }
@@ -67,7 +68,15 @@ class Connection
      */
     public function send($data)
     {
-        return $this->swooleConnection->send($data);
+        $len  = strlen($data);
+        $size = $this->swooleConnection->send($data);
+        if ($size === false) {
+            throw new SendException($this->swooleConnection->socket->errMsg, $this->swooleConnection->socket->errCode);
+        }
+        if ($len !== $size) {
+            throw new SendException('The sending data is incomplete, it may be that the socket has been closed by the peer.');
+        }
+        return true;
     }
 
     /**

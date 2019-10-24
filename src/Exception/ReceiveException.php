@@ -3,10 +3,10 @@
 namespace Mix\Server\Exception;
 
 /**
- * Class ReceiveFailureException
+ * Class ReceiveException
  * @package Mix\Server\Exception
  * @author liu,jian <coder.keda@gmail.com>
  */
-class ReceiveFailureException extends \RuntimeException
+class ReceiveException extends \RuntimeException
 {
 }
