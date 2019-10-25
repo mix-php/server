@@ -63,10 +63,10 @@ class Connection
 
     /**
      * Send
-     * @param $data
+     * @param string $data
      * @return bool
      */
-    public function send($data)
+    public function send(string $data)
     {
         $len  = strlen($data);
         $size = $this->swooleConnection->send($data);
