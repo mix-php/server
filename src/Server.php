@@ -26,9 +26,9 @@ class Server
     public $ssl = false;
 
     /**
-     * @var Server
+     * @var bool
      */
-    public $swooleServer;
+    public $reusePort = false;
 
     /**
      * @var ConnectionManager
@@ -36,17 +36,33 @@ class Server
     public $connectionManager;
 
     /**
+     * @var array
+     */
+    protected $options = [];
+
+    /**
+     * @var callable
+     */
+    protected $handler;
+
+    /**
+     * @var Server
+     */
+    public $swooleServer;
+
+    /**
      * Server constructor.
      * @param string $host
      * @param int $port
      * @param bool $ssl
+     * @param bool $reusePort
      */
-    public function __construct(string $host, int $port, bool $ssl = false)
+    public function __construct(string $host, int $port, bool $ssl = false, bool $reusePort = false)
     {
         $this->host              = $host;
         $this->port              = $port;
         $this->ssl               = $ssl;
-        $this->swooleServer      = new \Swoole\Coroutine\Server($host, $port, $ssl);
+        $this->reusePort         = $reusePort;
         $this->connectionManager = new ConnectionManager();
     }
 
@@ -56,7 +72,7 @@ class Server
      */
     public function set(array $options)
     {
-        return $this->swooleServer->set($options);
+        $this->options = $options;
     }
 
     /**
@@ -65,14 +81,24 @@ class Server
      */
     public function handle(callable $callback)
     {
-        return $this->swooleServer->handle(function (\Swoole\Coroutine\Server\Connection $connection) use ($callback) {
+        $this->handler = $callback;
+    }
+
+    /**
+     * Start
+     */
+    public function start()
+    {
+        $server = $this->swooleServer = new \Swoole\Coroutine\Server($this->host, $this->port, $this->ssl, $this->reusePort);
+        $server->set($this->options);
+        $server->handle(function (\Swoole\Coroutine\Server\Connection $connection) {
             try {
                 // 生成连接
                 $connection = new Connection($connection, $this->connectionManager);
                 $fd         = $connection->swooleSocket->fd;
                 $this->connectionManager->add($fd, $connection);
                 // 执行回调
-                call_user_func($callback, $connection);
+                call_user_func($this->handler, $connection);
             } catch (\Throwable $e) {
                 $isMix = class_exists(\Mix::class);
                 // 错误处理
@@ -85,14 +111,7 @@ class Server
                 $error->handleException($e);
             }
         });
-    }
-
-    /**
-     * Start
-     */
-    public function start()
-    {
-        return $this->swooleServer->start();
+        return $server->start();
     }
 
     /**
