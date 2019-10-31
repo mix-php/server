@@ -48,8 +48,9 @@ class ConnectionManager
      */
     public function closeAll()
     {
-        foreach ($this->connections as $connection) {
+        foreach ($this->connections as $fd => $connection) {
             $connection->close();
+            $this->remove($fd);
         }
     }
 

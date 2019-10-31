@@ -2,6 +2,7 @@
 
 namespace Mix\Server;
 
+use Mix\Server\Exception\CloseException;
 use Mix\Server\Exception\ReceiveException;
 use Mix\Server\Exception\SendException;
 
@@ -42,7 +43,7 @@ class Connection
 
     /**
      * Recv
-     * @return mixed
+     * @return string
      */
     public function recv()
     {
@@ -64,7 +65,6 @@ class Connection
     /**
      * Send
      * @param string $data
-     * @return bool
      */
     public function send(string $data)
     {
@@ -76,18 +76,17 @@ class Connection
         if ($len !== $size) {
             throw new SendException('The sending data is incomplete, it may be that the socket has been closed by the peer.');
         }
-        return true;
     }
 
     /**
      * Close
-     * @return bool
      */
     public function close()
     {
-        $fd = $this->swooleSocket->fd;
-        $this->connectionManager->remove($fd);
-        return $this->swooleConnection->close();
+        if (!$this->swooleConnection->close()) {
+            throw new CloseException($this->swooleConnection->socket->errMsg, $this->swooleConnection->socket->errCode);
+        }
+        $this->connectionManager->remove($this->swooleSocket->fd);
     }
 
 }

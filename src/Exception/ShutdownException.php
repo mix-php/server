@@ -3,9 +3,9 @@
 namespace Mix\Server\Exception;
 
 /**
- * Class ReceiveException
+ * Class ShutdownException
  * @package Mix\Server\Exception
  */
-class ReceiveException extends \RuntimeException
+class ShutdownException extends \RuntimeException
 {
 }

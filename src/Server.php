@@ -1,6 +1,8 @@
 <?php
 
 namespace Mix\Server;
+use Mix\Server\Exception\ShutdownException;
+use Mix\Server\Exception\StartException;
 
 /**
  * Class Server
@@ -46,7 +48,7 @@ class Server
     protected $handler;
 
     /**
-     * @var Server
+     * @var \Swoole\Coroutine\Server
      */
     public $swooleServer;
 
@@ -111,7 +113,9 @@ class Server
                 $error->handleException($e);
             }
         });
-        return $server->start();
+        if (!$server->start()) {
+            throw new StartException($server->errMsg, $server->errCode);
+        }
     }
 
     /**
@@ -119,9 +123,10 @@ class Server
      */
     public function shutdown()
     {
-        $status = $this->swooleServer->shutdown();
+        if (!$this->swooleServer->shutdown()) {
+            throw new ShutdownException($this->swooleServer->errMsg, $this->swooleServer->errCode);
+        }
         $this->connectionManager->closeAll();
-        return $status;
     }
 
 }
