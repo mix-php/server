@@ -115,7 +115,7 @@ class Server
             }
         });
         if (!$server->start()) {
-            throw new StartException($server->errMsg, $server->errCode);
+            throw new StartException($server->errMsg ?? 'none', $server->errCode);
         }
     }
 
