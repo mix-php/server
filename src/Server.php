@@ -1,6 +1,7 @@
 <?php
 
 namespace Mix\Server;
+
 use Mix\Server\Exception\ShutdownException;
 use Mix\Server\Exception\StartException;
 
@@ -124,7 +125,10 @@ class Server
     public function shutdown()
     {
         if (!$this->swooleServer->shutdown()) {
-            throw new ShutdownException($this->swooleServer->errMsg, $this->swooleServer->errCode);
+            if ($this->swooleServer->errCode == 0) {
+                return;
+            }
+            throw new ShutdownException($this->swooleServer->errMsg ?? 'none', $this->swooleServer->errCode);
         }
         $this->connectionManager->closeAll();
     }
