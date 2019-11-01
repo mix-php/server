@@ -2,9 +2,6 @@
 
 namespace Mix\Server;
 
-use Mix\Server\Exception\ShutdownException;
-use Mix\Server\Exception\StartException;
-
 /**
  * Class Server
  * @package Mix\Server
@@ -115,7 +112,7 @@ class Server
             }
         });
         if (!$server->start()) {
-            throw new StartException($server->errMsg ?? 'none', $server->errCode);
+            throw new \Swoole\Exception($server->errMsg ?? 'none', $server->errCode);
         }
     }
 
@@ -128,7 +125,7 @@ class Server
             if ($this->swooleServer->errCode == 0) {
                 return;
             }
-            throw new ShutdownException($this->swooleServer->errMsg ?? 'none', $this->swooleServer->errCode);
+            throw new \Swoole\Exception($this->swooleServer->errMsg ?? 'none', $this->swooleServer->errCode);
         }
         $this->connectionManager->closeAll();
     }

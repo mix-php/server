@@ -2,9 +2,7 @@
 
 namespace Mix\Server;
 
-use Mix\Server\Exception\CloseException;
 use Mix\Server\Exception\ReceiveException;
-use Mix\Server\Exception\SendException;
 
 /**
  * Class Connection
@@ -71,10 +69,10 @@ class Connection
         $len  = strlen($data);
         $size = $this->swooleConnection->send($data);
         if ($size === false) {
-            throw new SendException($this->swooleConnection->socket->errMsg, $this->swooleConnection->socket->errCode);
+            throw new \Swoole\Exception($this->swooleConnection->socket->errMsg, $this->swooleConnection->socket->errCode);
         }
         if ($len !== $size) {
-            throw new SendException('The sending data is incomplete, it may be that the socket has been closed by the peer.');
+            throw new \Swoole\Exception('The sending data is incomplete, it may be that the socket has been closed by the peer.');
         }
     }
 
@@ -92,7 +90,7 @@ class Connection
             if ($errMsg == 'Connection reset by peer' && $errCode == 104) {
                 return;
             }
-            throw new CloseException($errMsg, $errCode);
+            throw new \Swoole\Exception($errMsg, $errCode);
         }
         $this->connectionManager->remove($this->swooleSocket->fd);
     }
