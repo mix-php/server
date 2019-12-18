@@ -53,7 +53,7 @@ class Connection
         }
         if ($data === "") { // 连接关闭
             $this->close();
-            $errCode = 104;
+            $errCode = stripos(PHP_OS, 'Darwin') !== false ? 54 : 104; // mac=54, linux=104
             $errMsg  = swoole_strerror($errCode, 9);
             throw new ReceiveException($errMsg, $errCode);
         }
@@ -87,7 +87,7 @@ class Connection
             if ($errMsg == '' && $errCode == 0) {
                 return;
             }
-            if ($errMsg == 'Connection reset by peer' && $errCode == 104) {
+            if ($errMsg == 'Connection reset by peer' && in_array($errCode, [54, 104])) { // mac=54, linux=104
                 return;
             }
             throw new \Swoole\Exception($errMsg, $errCode);
