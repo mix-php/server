@@ -36,7 +36,7 @@ class Connection
     {
         $this->swooleConnection  = $connection;
         $this->connectionManager = $connectionManager;
-        $this->swooleSocket      = $connection->socket;
+        $this->swooleSocket      = method_exists($connection, 'exportSocket') ? $connection->exportSocket() : $connection->socket; // swoole >= 4.4.13 socket 修改成了 protected
     }
 
     /**
@@ -69,7 +69,8 @@ class Connection
         $len  = strlen($data);
         $size = $this->swooleConnection->send($data);
         if ($size === false) {
-            throw new \Swoole\Exception($this->swooleConnection->socket->errMsg, $this->swooleConnection->socket->errCode);
+            $socket = $this->swooleSocket;
+            throw new \Swoole\Exception($socket->errMsg, $socket->errCode);
         }
         if ($len !== $size) {
             throw new \Swoole\Exception('The sending data is incomplete, it may be that the socket has been closed by the peer.');
@@ -82,8 +83,9 @@ class Connection
     public function close()
     {
         if (!$this->swooleConnection->close()) {
-            $errMsg  = $this->swooleConnection->socket->errMsg;
-            $errCode = $this->swooleConnection->socket->errCode;
+            $socket  = $this->swooleSocket;
+            $errMsg  = $socket->errMsg;
+            $errCode = $socket->errCode;
             if ($errMsg == '' && $errCode == 0) {
                 return;
             }
