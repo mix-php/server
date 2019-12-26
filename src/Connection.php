@@ -42,6 +42,7 @@ class Connection
     /**
      * Recv
      * @return string
+     * @throws \Swoole\Exception
      */
     public function recv()
     {
@@ -63,6 +64,7 @@ class Connection
     /**
      * Send
      * @param string $data
+     * @throws \Swoole\Exception
      */
     public function send(string $data)
     {
@@ -79,6 +81,7 @@ class Connection
 
     /**
      * Close
+     * @throws \Swoole\Exception
      */
     public function close()
     {
@@ -94,7 +97,7 @@ class Connection
             }
             throw new \Swoole\Exception($errMsg, $errCode);
         }
-        $this->connectionManager->remove($this->swooleSocket->fd);
+        $this->connectionManager->remove($this);
     }
 
 }

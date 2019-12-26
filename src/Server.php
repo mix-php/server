@@ -86,6 +86,7 @@ class Server
 
     /**
      * Start
+     * @throws \Swoole\Exception
      */
     public function start()
     {
@@ -95,8 +96,7 @@ class Server
             try {
                 // 生成连接
                 $connection = new Connection($connection, $this->connectionManager);
-                $fd         = $connection->swooleSocket->fd;
-                $this->connectionManager->add($fd, $connection);
+                $this->connectionManager->add($connection);
                 // 执行回调
                 call_user_func($this->handler, $connection);
             } catch (\Throwable $e) {
@@ -118,6 +118,7 @@ class Server
 
     /**
      * Shutdown
+     * @throws \Swoole\Exception
      */
     public function shutdown()
     {
