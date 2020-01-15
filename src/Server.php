@@ -122,6 +122,9 @@ class Server
      */
     public function shutdown()
     {
+        if (!$this->swooleServer) {
+            return;
+        }
         if (!$this->swooleServer->shutdown()) {
             if ($this->swooleServer->errCode == 0) {
                 return;
